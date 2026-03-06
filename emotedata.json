@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 37007,
-  "lastUpdate": "2026-03-06T07:02:11.026Z",
+  "totalItems": 37016,
+  "lastUpdate": "2026-03-06T08:51:00.017Z",
   "data": [
     {
       "id": 3360689775,
@@ -148030,6 +148030,42 @@
     {
       "id": 79066076784004,
       "name": "5x30 Aura workout emote "
+    },
+    {
+      "id": 135453215840860,
+      "name": "SAILORR - COCONUT Dance"
+    },
+    {
+      "id": 81157473944722,
+      "name": "Arms Crossed Floating"
+    },
+    {
+      "id": 76030833516893,
+      "name": "Cursed Dancing Croissant Emote"
+    },
+    {
+      "id": 109298842928769,
+      "name": "Akiba Red Pose"
+    },
+    {
+      "id": 77159354365175,
+      "name": "♡: No! No!"
+    },
+    {
+      "id": 135250252586321,
+      "name": "nonchalant idle pose"
+    },
+    {
+      "id": 111185961629599,
+      "name": "Cute Hair Twirl"
+    },
+    {
+      "id": 87825984257994,
+      "name": "Stateside Dance"
+    },
+    {
+      "id": 105974210115048,
+      "name": "I See Kareem Groove"
     }
   ]
 }
