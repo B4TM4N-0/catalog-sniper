@@ -1,6 +1,9 @@
 const https = require("https");
 const fs = require("fs");
 
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
+
 const APIs = [
   {
     name: "Basic API",
@@ -56,10 +59,13 @@ function saveData(items, file) {
 function fetchJSON(url, retries = 3) {
   return new Promise((resolve, reject) => {
     const tryFetch = (attempt) => {
+
       const timeout = setTimeout(() => reject(new Error("Request timeout")), 30000);
 
       https.get(url, res => {
+
         clearTimeout(timeout);
+
         let data = "";
 
         if (res.statusCode !== 200) {
@@ -68,6 +74,7 @@ function fetchJSON(url, retries = 3) {
         }
 
         res.on("data", chunk => data += chunk);
+
         res.on("end", () => {
           try {
             resolve(JSON.parse(data));
@@ -75,10 +82,17 @@ function fetchJSON(url, retries = 3) {
             reject(new Error("JSON parse error"));
           }
         });
+
       }).on("error", e => {
+
         clearTimeout(timeout);
-        if (attempt < retries) setTimeout(() => tryFetch(attempt + 1), 2000 * attempt);
-        else reject(e);
+
+        if (attempt < retries) {
+          setTimeout(() => tryFetch(attempt + 1), 2000 * attempt);
+        } else {
+          reject(e);
+        }
+
       });
     };
 
@@ -86,15 +100,66 @@ function fetchJSON(url, retries = 3) {
   });
 }
 
+function fetchUserEmotes() {
+  return new Promise((resolve, reject) => {
+
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      log("Supabase env vars missing, skipping user emotes");
+      resolve([]);
+      return;
+    }
+
+    const url = `${SUPABASE_URL}/rest/v1/user_emotes?select=id,name`;
+
+    const req = https.request(url, {
+      method: "GET",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    }, res => {
+
+      let data = "";
+
+      res.on("data", chunk => data += chunk);
+
+      res.on("end", () => {
+        try {
+
+          const parsed = JSON.parse(data);
+
+          const items = parsed.map(e => ({
+            id: e.id,
+            name: e.name
+          }));
+
+          resolve(items);
+
+        } catch {
+          reject(new Error("Supabase JSON parse error"));
+        }
+      });
+
+    });
+
+    req.on("error", reject);
+    req.end();
+  });
+}
+
 async function fetchAPI(api, existingData) {
+
   const allItems = [];
+
   let cursor = "";
   let page = 0;
   let newCount = 0;
   let duplicateCount = 0;
 
   try {
+
     do {
+
       page++;
       log(`${api.name} - Page ${page}`);
 
@@ -102,111 +167,204 @@ async function fetchAPI(api, existingData) {
       const res = await fetchJSON(url);
 
       if (res.data && Array.isArray(res.data)) {
+
         res.data.forEach(item => {
-          if (existingData.ids.has(item.id)) duplicateCount++;
-          else {
+
+          if (existingData.ids.has(item.id)) {
+
+            duplicateCount++;
+
+          } else {
+
             const record = { id: item.id, name: item.name };
 
             if (item.bundledItems?.length) {
+
               const bundled = {};
               let counter = 1;
+
               item.bundledItems.forEach(b => {
+
                 if (b.type !== "UserOutfit" && b.id) {
+
                   const key = (counter++).toString();
+
                   bundled[key] = bundled[key] || [];
                   bundled[key].push(b.id);
+
                 }
+
               });
-              if (Object.keys(bundled).length) record.bundledItems = bundled;
+
+              if (Object.keys(bundled).length) {
+                record.bundledItems = bundled;
+              }
+
             }
 
             allItems.push(record);
             existingData.ids.add(item.id);
             newCount++;
+
           }
+
         });
+
       }
 
       cursor = res.nextPageCursor;
+
       await new Promise(r => setTimeout(r, 1000));
+
     } while (cursor && cursor.trim() !== "");
+
   } catch (e) {
+
     log(`Error in ${api.name}: ${e.message}`);
+
   }
 
   return { items: allItems, newCount, duplicateCount };
 }
 
 async function processAPIs() {
+
   const start = Date.now();
+
   log("Starting combined update...");
 
   const grouped = APIs.reduce((acc, api) => {
+
     acc[api.outputFile] = acc[api.outputFile] || [];
     acc[api.outputFile].push(api);
+
     return acc;
+
   }, {});
 
   const results = {};
 
   for (const [file, apis] of Object.entries(grouped)) {
+
     log(`Processing ${file}...`);
 
     const existingData = loadData(file);
+
     const allItems = [...existingData.items];
+
     let newTotal = 0;
     let dupTotal = 0;
 
     for (const api of apis) {
+
       const result = await fetchAPI(api, existingData);
+
       allItems.push(...result.items);
+
       newTotal += result.newCount;
       dupTotal += result.duplicateCount;
+
       log(`${api.name} - New: ${result.newCount}, Duplicates: ${result.duplicateCount}`);
+
+    }
+
+    try {
+
+      const userEmotes = await fetchUserEmotes();
+
+      userEmotes.forEach(e => {
+
+        if (!existingData.ids.has(e.id)) {
+
+          allItems.push(e);
+          existingData.ids.add(e.id);
+          newTotal++;
+
+        }
+
+      });
+
+      log(`User emotes merged: ${userEmotes.length}`);
+
+    } catch (e) {
+
+      log(`Supabase fetch error: ${e.message}`);
+
     }
 
     const saved = saveData(allItems, file);
-    results[file] = { success: saved, total: allItems.length, newTotal, dupTotal };
+
+    results[file] = {
+      success: saved,
+      total: allItems.length,
+      newTotal,
+      dupTotal
+    };
+
     log(`${file} - Total: ${allItems.length}, New: ${newTotal}`);
+
   }
 
-  log(`All updates complete - Duration: ${((Date.now() - start)/1000).toFixed(2)}s`);
+  log(`All updates complete - Duration: ${((Date.now() - start) / 1000).toFixed(2)}s`);
+
   return results;
 }
 
 async function main() {
+
   log("Starting catalog-sniper update...");
 
   try {
+
     const results = await processAPIs();
+
     let allOk = true;
 
     for (const [file, r] of Object.entries(results)) {
+
       if (!r.success) {
+
         allOk = false;
         log(`Failed to save ${file}`);
+
       } else {
+
         log(`✓ ${file}: ${r.total} items (${r.newTotal} new)`);
+
       }
+
     }
 
-    allOk ? log("catalog-sniper completed successfully") : log("catalog-sniper completed with some errors");
+    if (allOk) {
+      log("catalog-sniper completed successfully");
+    } else {
+      log("catalog-sniper completed with some errors");
+    }
+
     process.exit(allOk ? 0 : 1);
 
   } catch (e) {
+
     log(`catalog-sniper error: ${e.message}`);
+
     process.exit(1);
+
   }
+
 }
 
 process.on("unhandledRejection", reason => {
+
   log(`Unhandled error: ${reason}`);
   process.exit(1);
+
 });
 
 process.on("uncaughtException", e => {
+
   log(`Uncaught exception: ${e.message}`);
   process.exit(1);
+
 });
 
 main();
