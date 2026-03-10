@@ -8,12 +8,21 @@ method:"POST",
 headers:{
 "Content-Type":"application/json",
 apikey:process.env.SUPABASE_SERVICE_KEY,
-Authorization:`Bearer ${process.env.SUPABASE_SERVICE_KEY}`
+Authorization:`Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
+Prefer:"return=minimal"
 },
-body:JSON.stringify({id,name})
+body:JSON.stringify({id,name:name||"User Emote"})
 });
-if(!r.ok){res.status(500).json({error:"insert failed"});return;}
-res.status(200).json({success:true});
+if(r.status===409){
+res.status(200).json({success:false,message:"emote already exists"});
+return;
+}
+if(!r.ok){
+const text=await r.text();
+res.status(500).json({error:text});
+return;
+}
+res.status(200).json({success:true,id});
 }catch(e){
 res.status(500).json({error:e.message});
 }
