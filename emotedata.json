@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 38157,
-  "lastUpdate": "2026-03-15T07:09:40.635Z",
+  "totalItems": 38164,
+  "lastUpdate": "2026-03-15T08:48:41.570Z",
   "data": [
     {
       "id": 3360689775,
@@ -152630,6 +152630,34 @@
     {
       "id": 120907876606617,
       "name": "Cute Nervous Wave [Idle]"
+    },
+    {
+      "id": 78403865334656,
+      "name": "Excited Puppy Furry Idle"
+    },
+    {
+      "id": 97437674164416,
+      "name": "Relaxed God Aura"
+    },
+    {
+      "id": 93927294885300,
+      "name": "MM2 Death Pose"
+    },
+    {
+      "id": 115390936263175,
+      "name": "Nervous Rocking"
+    },
+    {
+      "id": 96821551280954,
+      "name": "Laying on Pumpkin [Float]"
+    },
+    {
+      "id": 78241853430550,
+      "name": "Bleood Walk"
+    },
+    {
+      "id": 127243071705327,
+      "name": "💖Desperate Spin"
     }
   ]
 }
