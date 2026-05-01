@@ -36,7 +36,7 @@ jobs:
       - name: Check for Changes
         id: git-check
         run: |
-          if ! git diff --exit-code emotedata.json animationdata.json; then
+          if ! git diff --exit-code emotedata.json animationdata.json Moods.json; then
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
@@ -45,13 +45,13 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add emotedata.json animationdata.json
-          git commit -m "🤖 Auto update emotes & animations - $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          git add emotedata.json animationdata.json Moods.json
+          git commit -m "🤖 Auto update emotes, animations & moods - $(date '+%Y-%m-%d %H:%M:%S UTC')"
           git push
 
       - name: Log Update Results
         run: |
-          for FILE in emotedata.json animationdata.json; do
+          for FILE in emotedata.json animationdata.json Moods.json; do
             echo "--- $FILE ---"
             if [ -f "$FILE" ]; then
               TOTAL_ITEMS=$(jq '.totalItems' "$FILE")
@@ -63,16 +63,3 @@ jobs:
               echo "⚠️ $FILE not found"
             fi
           done
-
-      - name: Update README with Total Emotes
-        if: steps.git-check.outputs.changes == 'true'
-        run: |
-          EMOTES=$(jq '.totalItems' emotedata.json)
-          ANIMATIONS=$(jq '.totalItems' animationdata.json)
-
-          sed -i "s/Total emotes: \`[0-9]*\`/Total emotes: \`$EMOTES\`/g" README.md
-          sed -i "s/Total animations: \`[0-9]*\`/Total animations: \`$ANIMATIONS\`/g" README.md
-
-          git add README.md
-          git commit --amend --no-edit
-          git push --force-with-lease
