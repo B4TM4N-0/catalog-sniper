@@ -109,7 +109,7 @@ function fetchUserEmotes() {
       return;
     }
 
-    const url = `${SUPABASE_URL}/rest/v1/user_emotes?select=id,name`;
+    const url = `${SUPABASE_URL}/rest/v1/user_emotes?select=id,name,type`;
 
     const req = https.request(url, {
       method: "GET",
@@ -130,7 +130,8 @@ function fetchUserEmotes() {
 
           const items = parsed.map(e => ({
             id: e.id,
-            name: e.name
+            name: e.name,
+            type: e.type || "emotes"
           }));
 
           resolve(items);
@@ -244,43 +245,62 @@ async function processAPIs() {
 
   const results = {};
 
-	for (const [file, apis] of Object.entries(grouped)) {
-	    log(`Processing ${file}...`);
-	
-	    const existingData = loadData(file);
-	    const allItems = [...existingData.items];
-	
-	    let newTotal = 0;
-	    let dupTotal = 0;
-	
-	    for (const api of apis) {
-	        const result = await fetchAPI(api, existingData);
-	        allItems.push(...result.items);
-	        newTotal += result.newCount;
-	        dupTotal += result.duplicateCount;
-	        log(`${api.name} - New: ${result.newCount}, Duplicates: ${result.duplicateCount}`);
-	    }
-	
-	    if (file === "emotedata.json") {
-	        try {
-	            const userEmotes = await fetchUserEmotes();
-	            userEmotes.forEach(e => {
-	                if (!existingData.ids.has(e.id)) {
-	                    allItems.push(e);
-	                    existingData.ids.add(e.id);
-	                    newTotal++;
-	                }
-	            });
-	            log(`User emotes merged: ${userEmotes.length}`);
-	        } catch (e) {
-	            log(`Supabase fetch error: ${e.message}`);
-	        }
-	    }
-	
-	    const saved = saveData(allItems, file);
-	    results[file] = { success: saved, total: allItems.length, newTotal, dupTotal };
-	    log(`${file} - Total: ${allItems.length}, New: ${newTotal}`);
-	}
+  const moodsData = loadData("Moods.json");
+
+  for (const [file, apis] of Object.entries(grouped)) {
+    log(`Processing ${file}...`);
+
+    const existingData = loadData(file);
+    const allItems = [...existingData.items];
+
+    let newTotal = 0;
+    let dupTotal = 0;
+
+    for (const api of apis) {
+      const result = await fetchAPI(api, existingData);
+      allItems.push(...result.items);
+      newTotal += result.newCount;
+      dupTotal += result.duplicateCount;
+      log(`${api.name} - New: ${result.newCount}, Duplicates: ${result.duplicateCount}`);
+    }
+
+    if (file === "emotedata.json") {
+      try {
+        const userEmotes = await fetchUserEmotes();
+
+        let moodsNew = 0;
+
+        userEmotes.forEach(e => {
+          if (e.type === "moods") {
+            if (!moodsData.ids.has(e.id)) {
+              moodsData.items.push({ id: e.id, name: e.name });
+              moodsData.ids.add(e.id);
+              moodsNew++;
+            }
+          } else {
+            if (!existingData.ids.has(e.id)) {
+              allItems.push({ id: e.id, name: e.name });
+              existingData.ids.add(e.id);
+              newTotal++;
+            }
+          }
+        });
+
+        log(`User emotes merged: ${userEmotes.length} (moods: ${moodsNew})`);
+
+      } catch (e) {
+        log(`Supabase fetch error: ${e.message}`);
+      }
+    }
+
+    const saved = saveData(allItems, file);
+    results[file] = { success: saved, total: allItems.length, newTotal, dupTotal };
+    log(`${file} - Total: ${allItems.length}, New: ${newTotal}`);
+  }
+
+  const moodsSaved = saveData(moodsData.items, "Moods.json");
+  results["Moods.json"] = { success: moodsSaved, total: moodsData.items.length };
+  log(`Moods.json - Total: ${moodsData.items.length}`);
 
   log(`All updates complete - Duration: ${((Date.now() - start) / 1000).toFixed(2)}s`);
 
@@ -306,7 +326,7 @@ async function main() {
 
       } else {
 
-        log(`✓ ${file}: ${r.total} items (${r.newTotal} new)`);
+        log(`✓ ${file}: ${r.total} items (${r.newTotal ?? 0} new)`);
 
       }
 
@@ -331,17 +351,13 @@ async function main() {
 }
 
 process.on("unhandledRejection", reason => {
-
   log(`Unhandled error: ${reason}`);
   process.exit(1);
-
 });
 
 process.on("uncaughtException", e => {
-
   log(`Uncaught exception: ${e.message}`);
   process.exit(1);
-
 });
 
 main();
