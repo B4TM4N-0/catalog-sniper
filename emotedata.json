@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 44227,
-  "lastUpdate": "2026-05-02T06:16:04.227Z",
+  "totalItems": 44233,
+  "lastUpdate": "2026-05-02T08:26:13.969Z",
   "data": [
     {
       "id": 3360689775,
@@ -176910,6 +176910,30 @@
     {
       "id": 118202094980121,
       "name": "Messi celebration"
+    },
+    {
+      "id": 128438913234993,
+      "name": "🕷️Jumpy Spider Emote"
+    },
+    {
+      "id": 91001780086207,
+      "name": "Nerfed Legs"
+    },
+    {
+      "id": 138952172112979,
+      "name": "Aura Pass"
+    },
+    {
+      "id": 123755160179769,
+      "name": "Girl Like Me - PinkPantheress"
+    },
+    {
+      "id": 112694153829774,
+      "name": "SPICY - AESPA"
+    },
+    {
+      "id": 128414146151897,
+      "name": "TWICE - What Is Love"
     }
   ]
 }
