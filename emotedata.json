@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 44396,
-  "lastUpdate": "2026-05-04T06:50:19.979Z",
+  "totalItems": 44401,
+  "lastUpdate": "2026-05-04T09:28:25.182Z",
   "data": [
     {
       "id": 3360689775,
@@ -177586,6 +177586,26 @@
     {
       "id": 110988578948928,
       "name": "GOOBA Dance [BEST]"
+    },
+    {
+      "id": 89603951322670,
+      "name": "JUMP! JUMP!! JUMP!!! Dance"
+    },
+    {
+      "id": 129740989205970,
+      "name": "Spinning Emote"
+    },
+    {
+      "id": 134746930440296,
+      "name": "[R6] JUMPSTYLE"
+    },
+    {
+      "id": 121072517890749,
+      "name": "Fernanfloo Dance"
+    },
+    {
+      "id": 116811490713864,
+      "name": "♡: kawaii idle pose"
     }
   ]
 }
