@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 48384,
-  "lastUpdate": "2026-06-06T12:11:16.434Z",
+  "totalItems": 48389,
+  "lastUpdate": "2026-06-06T14:49:17.060Z",
   "data": [
     {
       "id": 3360689775,
@@ -193538,6 +193538,26 @@
     {
       "id": 103587588828815,
       "name": "Yuji Itadori Jumping Edit Idle"
+    },
+    {
+      "id": 101448115064823,
+      "name": "R6 Idle"
+    },
+    {
+      "id": 100923477715266,
+      "name": "Say So"
+    },
+    {
+      "id": 115951754591191,
+      "name": "LIMITED Endless Spinning [CODE: SPUN]"
+    },
+    {
+      "id": 125526859063735,
+      "name": "Ingrid Game Over"
+    },
+    {
+      "id": 108800798848413,
+      "name": "Reggeton Dembow"
     }
   ]
 }
