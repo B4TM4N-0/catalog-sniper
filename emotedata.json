@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 48473,
-  "lastUpdate": "2026-06-07T09:27:56.396Z",
+  "totalItems": 48482,
+  "lastUpdate": "2026-06-07T11:55:34.661Z",
   "data": [
     {
       "id": 3360689775,
@@ -193894,6 +193894,42 @@
     {
       "id": 89535895159519,
       "name": "Baila! (Vini Jr. Celebration)"
+    },
+    {
+      "id": 88814172353660,
+      "name": "Jump Kick"
+    },
+    {
+      "id": 80555834139857,
+      "name": "Gravity Shattered"
+    },
+    {
+      "id": 92716150798113,
+      "name": "[NEW] Sigma Dance [BEST]"
+    },
+    {
+      "id": 104097056528312,
+      "name": "Kawaii Pose 5"
+    },
+    {
+      "id": 108228453506885,
+      "name": "Yoga Body Bend"
+    },
+    {
+      "id": 134596768608425,
+      "name": "Juri Pose"
+    },
+    {
+      "id": 132862527930912,
+      "name": "Loop Cute Angry Idle 😡 [Dynamic Head]"
+    },
+    {
+      "id": 79148600967331,
+      "name": "[R6] Cozy Sit (Right)"
+    },
+    {
+      "id": 119349438610295,
+      "name": "Cute Sit"
     }
   ]
 }
