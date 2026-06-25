@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 50237,
-  "lastUpdate": "2026-06-25T14:47:01.720Z",
+  "totalItems": 50243,
+  "lastUpdate": "2026-06-25T17:20:00.025Z",
   "data": [
     {
       "id": 3360689775,
@@ -200950,6 +200950,30 @@
     {
       "id": 70408316392114,
       "name": "🔥Die Lit V2"
+    },
+    {
+      "id": 75612149156146,
+      "name": "whatever this emote is"
+    },
+    {
+      "id": 82184451287749,
+      "name": "Gojo Aura Pose"
+    },
+    {
+      "id": 99773040523604,
+      "name": " Pretty Young Thing"
+    },
+    {
+      "id": 128627243621570,
+      "name": "peter griffin roadhouse kick"
+    },
+    {
+      "id": 131017270246517,
+      "name": "Clapping"
+    },
+    {
+      "id": 86759996287620,
+      "name": "Mecha Chameleon Ground"
     }
   ]
 }
