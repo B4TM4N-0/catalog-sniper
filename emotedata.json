@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 52865,
-  "lastUpdate": "2026-07-19T15:04:00.979Z",
+  "totalItems": 52870,
+  "lastUpdate": "2026-07-19T17:06:33.622Z",
   "data": [
     {
       "id": 3360689775,
@@ -211462,6 +211462,26 @@
     {
       "id": 116118328612445,
       "name": "adorable doll sitting emote ♡"
+    },
+    {
+      "id": 78189174730121,
+      "name": "Angry Rage Emote"
+    },
+    {
+      "id": 70983540642257,
+      "name": ":3 Therian Tail Wag Shake"
+    },
+    {
+      "id": 73546311987477,
+      "name": "Crazy Monkey Emote"
+    },
+    {
+      "id": 72134532726203,
+      "name": "Cute Doll Twirl"
+    },
+    {
+      "id": 92012682810960,
+      "name": "Sakedung Kading Dance"
     }
   ]
 }
