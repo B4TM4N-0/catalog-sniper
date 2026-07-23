@@ -1,7 +1,7 @@
 {
   "keyword": null,
-  "totalItems": 53271,
-  "lastUpdate": "2026-07-23T04:21:28.513Z",
+  "totalItems": 53279,
+  "lastUpdate": "2026-07-23T07:38:42.465Z",
   "data": [
     {
       "id": 3360689775,
@@ -213086,6 +213086,38 @@
     {
       "id": 137142775615212,
       "name": "Chill Sit Emote"
+    },
+    {
+      "id": 133956101278990,
+      "name": "Holding Head While Aura Farming [BEST]"
+    },
+    {
+      "id": 106794401558896,
+      "name": "Yuji Jumping Edit [BEST]"
+    },
+    {
+      "id": 88728461788962,
+      "name": "Gojo Aura Farming Floating Idle"
+    },
+    {
+      "id": 139883840469789,
+      "name": "Time Muffin Full Dance"
+    },
+    {
+      "id": 93390034833597,
+      "name": "Nodding Yes"
+    },
+    {
+      "id": 119757641086747,
+      "name": "♡: cutesy hand on head pose"
+    },
+    {
+      "id": 126254141855189,
+      "name": "Survivor scream"
+    },
+    {
+      "id": 92590388582431,
+      "name": "WAVE SHAKING DANCE~"
     }
   ]
 }
