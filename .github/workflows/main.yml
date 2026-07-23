@@ -26,17 +26,41 @@ jobs:
         run: sudo apt-get update && sudo apt-get install jq -y
 
       - name: Run Sniper Update
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          echo "Starting updating the file..."
+          echo "Starting catalog update..."
           node main.js
+
+      - name: Update API Info
+        run: |
+          DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+
+          EMOTES=$(jq '.totalItems' emotedata.json)
+          ANIMATIONS=$(jq '.totalItems' animationdata.json)
+          MOODS=$(jq '.totalItems' mooddata.json)
+
+          cat > v1/info.json <<EOF
+          {
+            "version": "1.0.0",
+            "lastUpdate": "$DATE",
+            "emotes": {
+              "count": $EMOTES,
+              "path": "/emotedata.json"
+            },
+            "animations": {
+              "count": $ANIMATIONS,
+              "path": "/animationdata.json"
+            },
+            "moods": {
+              "count": $MOODS,
+              "path": "/mooddata.json"
+            }
+          }
+          EOF
 
       - name: Check for Changes
         id: git-check
         run: |
-          if ! git diff --exit-code emotedata.json animationdata.json Moods.json; then
+          if ! git diff --exit-code emotedata.json animationdata.json mooddata.json v1/info.json; then
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
@@ -45,21 +69,31 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add emotedata.json animationdata.json Moods.json
-          git commit -m "🤖 Auto update emotes, animations & moods - $(date '+%Y-%m-%d %H:%M:%S UTC')"
+
+          git add emotedata.json animationdata.json mooddata.json v1/info.json
+
+          git commit -m "chore: update catalog data - $(date '+%Y-%m-%d %H:%M:%S UTC')"
+
           git push
 
       - name: Log Update Results
         run: |
-          for FILE in emotedata.json animationdata.json Moods.json; do
+          for FILE in emotedata.json animationdata.json mooddata.json; do
             echo "--- $FILE ---"
+
             if [ -f "$FILE" ]; then
               TOTAL_ITEMS=$(jq '.totalItems' "$FILE")
               LAST_UPDATE=$(jq -r '.lastUpdate' "$FILE")
+
               echo "Update completed"
               echo "Total items: $TOTAL_ITEMS"
               echo "Last update: $LAST_UPDATE"
             else
-              echo "⚠️ $FILE not found"
+              echo "$FILE not found"
             fi
           done
+
+      - name: Log API Info
+        run: |
+          echo "--- v1/info.json ---"
+          cat v1/info.json
