@@ -1,0 +1,9 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/v1/:path*",
+      "destination": "/v1/:path*"
+    }
+  ]
+}
