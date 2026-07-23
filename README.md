@@ -1,17 +1,20 @@
-# Catalog Sniper
+#Catalog Sniper
 
 A Roblox catalog data API providing emotes, animations, and moods as JSON datasets.
 
-### url
+### URL
+
 [https://catalog-sniper.vercel.app](https://catalog-sniper.vercel.app)
 
 ---
 
+# Folder Structure
+```
 Catalog Sniper
 │
 ├── .github/
 │   └── workflows/
-│       └── update.yml
+│       └── main.yml
 │
 ├── public/
 │   ├── index.html
@@ -29,4 +32,5 @@ Catalog Sniper
 │
 ├── main.js
 ├── package.json
-└── vercel.json
+└── README.md
+```
