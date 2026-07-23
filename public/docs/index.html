@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Documentation</title>
+    <meta name="description" content="Catalog Sniper documentation.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="docs-container">
+
+    <aside class="sidebar">
+
+        <h2>Catalog Sniper</h2>
+
+        <nav>
+            <a href="#introduction">Introduction</a>
+            <a href="#endpoints">Endpoints</a>
+            <a href="#response">Response Format</a>
+            <a href="#examples">Examples</a>
+        </nav>
+
+    </aside>
+
+
+    <main class="content">
+
+
+        <section id="introduction">
+
+            <h1>Documentation</h1>
+
+            <p>
+                Catalog Sniper provides public Roblox catalog data
+                containing emotes, animations, and moods.
+            </p>
+
+            <p>
+                All datasets are available as JSON files and are
+                automatically updated through GitHub Actions.
+            </p>
+
+        </section>
+
+
+
+        <section id="endpoints">
+
+            <h2>Endpoints</h2>
+
+
+            <div class="endpoint">
+
+                <code>GET /v1/emotedata.json</code>
+
+                <p>
+                    Returns Roblox emote catalog data.
+                </p>
+
+            </div>
+
+
+            <div class="endpoint">
+
+                <code>GET /v1/animationdata.json</code>
+
+                <p>
+                    Returns Roblox animation catalog data.
+                </p>
+
+            </div>
+
+
+            <div class="endpoint">
+
+                <code>GET /v1/mooddata.json</code>
+
+                <p>
+                    Returns Roblox mood catalog data.
+                </p>
+
+            </div>
+
+
+            <div class="endpoint">
+
+                <code>GET /v1/info.json</code>
+
+                <p>
+                    Returns dataset metadata and statistics.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+
+        <section id="response">
+
+            <h2>Response Format</h2>
+
+
+            <p>
+                All catalog files use a consistent JSON structure.
+            </p>
+
+
+            <pre><code>{
+  "keyword": null,
+  "totalItems": 112,
+  "lastUpdate": "2026-07-23T10:25:43.372Z",
+  "data": [
+    {
+      "id": 14618207727,
+      "name": "Default Mood"
+    }
+  ]
+}</code></pre>
+
+
+        </section>
+
+
+
+
+        <section id="examples">
+
+            <h2>Examples</h2>
+
+
+            <p>
+                Fetch a dataset using a normal HTTP request:
+            </p>
+
+
+            <pre><code>fetch("/v1/mooddata.json")
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+  });</code></pre>
+
+
+        </section>
+
+
+
+
+        <footer>
+            Catalog Sniper · Open Source
+        </footer>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+</html>
