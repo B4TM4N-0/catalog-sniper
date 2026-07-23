@@ -5,8 +5,8 @@
     --foreground: #fafafa;
     --muted: #a1a1aa;
     --border: #27272a;
-    --secondary: #18181b;
-    --code: #111113;
+    --card: #111113;
+    --code: #18181b;
 }
 
 * {
@@ -30,37 +30,35 @@ body {
 .docs-container {
     display: flex;
 
-    min-height: 100vh;
-
-    max-width: 1400px;
+    max-width: 1280px;
 
     margin: auto;
+
+    padding: 64px 32px;
+
+    gap: 64px;
 }
 
 
 .sidebar {
-    width: 260px;
-
-    padding: 32px 24px;
-
-    border-right: 1px solid var(--border);
+    width: 240px;
 
     position: sticky;
 
-    top: 0;
+    top: 32px;
 
-    height: 100vh;
+    height: fit-content;
 }
 
 
 .sidebar h2 {
-    font-size: 16px;
+    font-size: 18px;
 
     font-weight: 600;
 
-    letter-spacing: -0.3px;
+    letter-spacing: -0.5px;
 
-    margin: 0 0 32px;
+    margin-bottom: 24px;
 }
 
 
@@ -74,9 +72,9 @@ body {
 
 
 .sidebar a {
-    color: var(--muted);
-
     text-decoration: none;
+
+    color: var(--muted);
 
     font-size: 14px;
 
@@ -91,54 +89,53 @@ body {
 .sidebar a:hover {
     color: var(--foreground);
 
-    background: var(--secondary);
+    background: var(--card);
 }
 
 
 
 .content {
-    flex: 1;
+    max-width: 760px;
 
-    max-width: 850px;
-
-    padding: 48px 48px;
+    width: 100%;
 }
-
 
 
 section {
-    margin-bottom: 70px;
+    margin-bottom: 80px;
 
-    scroll-margin-top: 30px;
+    scroll-margin-top: 40px;
 }
 
 
+
 h1 {
-    font-size: 42px;
+    font-size: 48px;
+
+    line-height: 1;
 
     letter-spacing: -2px;
 
-    line-height: 1.1;
-
-    margin: 0 0 18px;
+    margin: 0 0 24px;
 }
 
 
 h2 {
     font-size: 24px;
 
-    letter-spacing: -0.8px;
+    letter-spacing: -1px;
 
     margin-bottom: 20px;
 }
 
 
+
 p {
     color: var(--muted);
 
-    font-size: 15px;
-
     line-height: 1.7;
+
+    font-size: 15px;
 }
 
 
@@ -146,11 +143,11 @@ p {
 .endpoint {
     border: 1px solid var(--border);
 
-    border-radius: 8px;
+    border-radius: 10px;
 
-    padding: 20px;
+    padding: 18px 20px;
 
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 
     background: transparent;
 
@@ -159,43 +156,36 @@ p {
 
 
 .endpoint:hover {
-    background: var(--secondary);
+    background: var(--card);
 
     border-color: #3f3f46;
 }
 
 
 .endpoint code {
-    display: inline-flex;
-
     font-family: "JetBrains Mono", monospace;
 
-    font-size: 13px;
+    font-size: 14px;
 
     color: var(--foreground);
-
-    background: var(--secondary);
-
-    border: 1px solid var(--border);
-
-    padding: 6px 10px;
-
-    border-radius: 6px;
 }
 
 
+
 .endpoint p {
-    margin: 14px 0 0;
+    margin: 12px 0 0;
 }
 
 
 
 pre {
+    margin-top: 24px;
+
     background: var(--code);
 
     border: 1px solid var(--border);
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     padding: 20px;
 
@@ -206,11 +196,11 @@ pre {
 pre code {
     font-family: "JetBrains Mono", monospace;
 
+    color: #e4e4e7;
+
     font-size: 13px;
 
-    line-height: 1.7;
-
-    color: var(--foreground);
+    line-height: 1.8;
 }
 
 
@@ -231,29 +221,22 @@ footer {
 
     .docs-container {
         display: block;
+
+        padding: 32px 20px;
     }
 
 
     .sidebar {
+        position: static;
+
         width: 100%;
 
-        height: auto;
-
-        position: relative;
-
-        border-right: 0;
-
-        border-bottom: 1px solid var(--border);
-    }
-
-
-    .content {
-        padding: 32px 24px;
+        margin-bottom: 40px;
     }
 
 
     h1 {
-        font-size: 36px;
+        font-size: 38px;
     }
 
 }
