@@ -1,24 +1,28 @@
 const https = require("https");
 const fs = require("fs");
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY;
-
-const APIs = [
+const Sources = [
   {
-    name: "Basic API",
-    url: "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=39&Limit=30",
-    outputFile: "emotedata.json"
+    name: "Emotes",
+    urls: [
+      "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=39&Limit=30",
+      "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=39&Limit=30&salesTypeFilter=1&SortType=3"
+    ],
+    output: "emotedata.json"
   },
   {
-    name: "Latest API",
-    url: "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=39&Limit=30&salesTypeFilter=1&SortType=3",
-    outputFile: "emotedata.json"
+    name: "Animations",
+    urls: [
+      "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=38&salesTypeFilter=1&Limit=30"
+    ],
+    output: "animationdata.json"
   },
   {
-    name: "Animation API",
-    url: "https://catalog.roproxy.com/v1/search/items/details?Category=12&Subcategory=38&salesTypeFilter=1&Limit=30",
-    outputFile: "animationdata.json"
+    name: "Moods",
+    urls: [
+      "https://catalog.roproxy.com/v1/search/items/details?Category=66&Limit=30"
+    ],
+    output: "Moods.json"
   }
 ];
 
@@ -29,8 +33,7 @@ function log(msg) {
 function loadData(filePath) {
   try {
     if (fs.existsSync(filePath)) {
-      const content = JSON.parse(fs.readFileSync(filePath, "utf8"));
-      const items = content.data || [];
+      const items = JSON.parse(fs.readFileSync(filePath, "utf8")).data || [];
       return { items, ids: new Set(items.map((i) => i.id)) };
     }
   } catch {
@@ -41,13 +44,20 @@ function loadData(filePath) {
 
 function saveData(items, filePath) {
   try {
-    const output = {
-      keyword: null,
-      totalItems: items.length,
-      lastUpdate: new Date().toISOString(),
-      data: items
-    };
-    fs.writeFileSync(filePath, JSON.stringify(output, null, 2), "utf8");
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify(
+        {
+          keyword: null,
+          totalItems: items.length,
+          lastUpdate: new Date().toISOString(),
+          data: items
+        },
+        null,
+        2
+      ),
+      "utf8"
+    );
     return true;
   } catch (err) {
     log(`Save error for ${filePath}: ${err.message}`);
@@ -61,6 +71,7 @@ async function fetchJSON(url, retries = 3) {
       return await new Promise((resolve, reject) => {
         const req = https.get(url, (res) => {
           if (res.statusCode !== 200) {
+            clearTimeout(timeout);
             req.destroy();
             return reject(new Error(`HTTP ${res.statusCode}`));
           }
@@ -68,6 +79,7 @@ async function fetchJSON(url, retries = 3) {
           let data = "";
           res.on("data", (chunk) => { data += chunk; });
           res.on("end", () => {
+            clearTimeout(timeout);
             try {
               resolve(JSON.parse(data));
             } catch {
@@ -96,43 +108,7 @@ async function fetchJSON(url, retries = 3) {
   }
 }
 
-async function fetchUserEmotes() {
-  if (!SUPABASE_URL || !SUPABASE_KEY) {
-    log("Supabase env vars missing, skipping user emotes");
-    return [];
-  }
-
-  return new Promise((resolve, reject) => {
-    const url = `${SUPABASE_URL}/rest/v1/user_emotes?select=id,name,type`;
-    const req = https.request(url, {
-      method: "GET",
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`
-      }
-    }, (res) => {
-      let data = "";
-      res.on("data", (chunk) => { data += chunk; });
-      res.on("end", () => {
-        try {
-          const parsed = JSON.parse(data);
-          resolve(parsed.map((e) => ({
-            id: e.id,
-            name: e.name,
-            type: e.type || "emotes"
-          })));
-        } catch {
-          reject(new Error("Supabase JSON parse error"));
-        }
-      });
-    });
-
-    req.on("error", reject);
-    req.end();
-  });
-}
-
-async function fetchAPI(api, existingData) {
+async function fetchCatalog(url, name, existingData, isMoods) {
   const allItems = [];
   let cursor = "";
   let page = 0;
@@ -142,10 +118,9 @@ async function fetchAPI(api, existingData) {
   try {
     do {
       page++;
-      log(`${api.name} - Page ${page}`);
+      log(`${name} - Page ${page}`);
 
-      const url = cursor ? `${api.url}&Cursor=${cursor}` : api.url;
-      const res = await fetchJSON(url);
+      const res = await fetchJSON(cursor ? `${url}&Cursor=${cursor}` : url);
 
       if (!res.data || !Array.isArray(res.data)) {
         cursor = res.nextPageCursor;
@@ -153,40 +128,61 @@ async function fetchAPI(api, existingData) {
       }
 
       for (const item of res.data) {
-        if (existingData.ids.has(item.id)) {
-          duplicateCount++;
-          continue;
-        }
-
-        const record = { id: item.id, name: item.name };
-
-        if (item.bundledItems?.length) {
-          const bundled = {};
-          let counter = 1;
-          for (const b of item.bundledItems) {
-            if (b.type !== "UserOutfit" && b.id) {
-              const key = String(counter++);
-              bundled[key] = bundled[key] || [];
-              bundled[key].push(b.id);
+        if (isMoods) {
+          if (item.bundledItems?.length) {
+            for (const b of item.bundledItems) {
+              if (b.assetType === 78 && b.type === "Asset" && b.id && b.name) {
+                if (!existingData.ids.has(b.id)) {
+                  allItems.push({ id: b.id, name: b.name });
+                  existingData.ids.add(b.id);
+                  newCount++;
+                } else {
+                  duplicateCount++;
+                }
+              }
             }
           }
-          if (Object.keys(bundled).length > 0) {
-            record.bundledItems = bundled;
+        } else {
+          if (existingData.ids.has(item.id)) {
+            duplicateCount++;
+            continue;
           }
-        }
 
-        allItems.push(record);
-        existingData.ids.add(item.id);
-        newCount++;
+          const record = { id: item.id, name: item.name };
+
+          if (item.bundledItems?.length) {
+            const bundled = {};
+            let counter = 1;
+            for (const b of item.bundledItems) {
+              if (b.type !== "UserOutfit" && b.id) {
+                const key = String(counter++);
+                bundled[key] = bundled[key] || [];
+                bundled[key].push(b.id);
+              }
+            }
+            if (Object.keys(bundled).length > 0) {
+              record.bundledItems = bundled;
+            }
+          }
+
+          allItems.push(record);
+          existingData.ids.add(item.id);
+          newCount++;
+        }
       }
 
       cursor = res.nextPageCursor;
+
+      if (isMoods && page >= 3) {
+        break;
+      }
+
       if (cursor && cursor.trim() !== "") {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } while (cursor && cursor.trim() !== "");
   } catch (err) {
-    log(`Error in ${api.name}: ${err.message}`);
+    log(`Error in ${name}: ${err.message}`);
   }
 
   return { items: allItems, newCount, duplicateCount };
@@ -196,53 +192,25 @@ async function processAPIs() {
   const start = Date.now();
   log("Starting combined update...");
 
-  const grouped = {};
-  for (const api of APIs) {
-    if (!grouped[api.outputFile]) grouped[api.outputFile] = [];
-    grouped[api.outputFile].push(api);
-  }
-
   const results = {};
-  const moodsData = loadData("Moods.json");
 
-  for (const [filePath, apis] of Object.entries(grouped)) {
+  for (const source of Sources) {
+    const filePath = source.output;
     log(`Processing ${filePath}...`);
+
     const existingData = loadData(filePath);
     const allItems = [...existingData.items];
 
     let newTotal = 0;
     let dupTotal = 0;
+    const isMoods = filePath === "Moods.json";
 
-    for (const api of apis) {
-      const result = await fetchAPI(api, existingData);
+    for (const url of source.urls) {
+      const result = await fetchCatalog(url, source.name, existingData, isMoods);
       allItems.push(...result.items);
       newTotal += result.newCount;
       dupTotal += result.duplicateCount;
-      log(`${api.name} - New: ${result.newCount}, Duplicates: ${result.duplicateCount}`);
-    }
-
-    if (filePath === "emotedata.json") {
-      try {
-        const userEmotes = await fetchUserEmotes();
-        let moodsNew = 0;
-
-        for (const emote of userEmotes) {
-          if (emote.type === "moods") {
-            if (!moodsData.ids.has(emote.id)) {
-              moodsData.items.push({ id: emote.id, name: emote.name });
-              moodsData.ids.add(emote.id);
-              moodsNew++;
-            }
-          } else if (!existingData.ids.has(emote.id)) {
-            allItems.push({ id: emote.id, name: emote.name });
-            existingData.ids.add(emote.id);
-            newTotal++;
-          }
-        }
-        log(`User emotes merged: ${userEmotes.length} (moods: ${moodsNew})`);
-      } catch (err) {
-        log(`Supabase fetch error: ${err.message}`);
-      }
+      log(`${source.name} - New: ${result.newCount}, Duplicates: ${result.duplicateCount}`);
     }
 
     const saved = saveData(allItems, filePath);
@@ -250,13 +218,7 @@ async function processAPIs() {
     log(`${filePath} - Total: ${allItems.length}, New: ${newTotal}`);
   }
 
-  const moodsSaved = saveData(moodsData.items, "Moods.json");
-  results["Moods.json"] = { success: moodsSaved, total: moodsData.items.length };
-  log(`Moods.json - Total: ${moodsData.items.length}`);
-
-  const duration = ((Date.now() - start) / 1000).toFixed(2);
-  log(`All updates complete - Duration: ${duration}s`);
-
+  log(`All updates complete - Duration: ${((Date.now() - start) / 1000).toFixed(2)}s`);
   return results;
 }
 
@@ -272,18 +234,12 @@ async function main() {
         allOk = false;
         log(`Failed to save ${filePath}`);
       } else {
-        const newCount = result.newTotal ?? 0;
-        log(`✓ ${filePath}: ${result.total} items (${newCount} new)`);
+        log(`✓ ${filePath}: ${result.total} items (${result.newTotal ?? 0} new)`);
       }
     }
 
-    if (allOk) {
-      log("catalog-sniper completed successfully");
-      process.exit(0);
-    } else {
-      log("catalog-sniper completed with some errors");
-      process.exit(1);
-    }
+    log(allOk ? "catalog-sniper completed successfully" : "catalog-sniper completed with some errors");
+    process.exit(allOk ? 0 : 1);
   } catch (err) {
     log(`catalog-sniper error: ${err.message}`);
     process.exit(1);
