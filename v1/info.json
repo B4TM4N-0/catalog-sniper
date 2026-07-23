@@ -11,6 +11,6 @@
   },
   "moods": {
     "count": 0,
-    "path": "/moods.json"
+    "path": "/mooddata.json"
   }
 }
