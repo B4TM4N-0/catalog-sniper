@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Catalog Sniper</title>
-    <meta name="description" content="Open-source Roblox emotes, animations, and moods API.">
+    <title>Sniper API</title>
+    <meta name="description" content="Roblox catalog API for emotes, animations, and moods.">
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -15,57 +15,58 @@
 <div class="container">
 
     <header>
-        <h1>Catalog Sniper</h1>
+        <h1>Sniper API</h1>
+
         <p>
-            Open-source Roblox emotes, animations, and moods catalog API.
-            Automatically updated using GitHub Actions.
+            Public Roblox catalog data for emotes, animations, and moods.
+            Updated automatically through GitHub Actions.
         </p>
 
         <div class="actions">
-            <a class="button primary" href="README.md">
+            <a class="button primary" href="/README.md">
                 Documentation
             </a>
 
-            <a class="button" href="https://github.com/B4TM4N-0/catalog-sniper/" target="_blank">
-                GitHub
+            <a class="button" href="https://github.com/B4TM4N-0/catalog-sniper" target="_blank">
+                Repository
             </a>
         </div>
     </header>
 
 
     <section>
-        <h2>Endpoints</h2>
+        <h2>API</h2>
 
         <div class="grid">
 
             <a class="card" href="/v1/emotedata.json">
                 <h3>/v1/emotedata.json</h3>
-                <p>
-                    Roblox emotes catalog data.
+                <p id="emotes-count">
+                    Loading emotes...
                 </p>
             </a>
 
 
             <a class="card" href="/v1/animationdata.json">
                 <h3>/v1/animationdata.json</h3>
-                <p>
-                    Roblox animation catalog data.
+                <p id="animations-count">
+                    Loading animations...
                 </p>
             </a>
 
 
             <a class="card" href="/v1/mooddata.json">
                 <h3>/v1/mooddata.json</h3>
-                <p>
-                    Roblox moods catalog data.
+                <p id="moods-count">
+                    Loading moods...
                 </p>
             </a>
 
 
             <a class="card" href="/v1/info.json">
                 <h3>/v1/info.json</h3>
-                <p>
-                    API metadata and statistics.
+                <p id="last-update">
+                    Loading metadata...
                 </p>
             </a>
 
@@ -77,21 +78,58 @@
         <h2>About</h2>
 
         <p>
-            Sniper API provides free JSON data for Roblox catalog assets.
-            Data is collected automatically and updated periodically.
+            Sniper API is an open-source dataset containing Roblox catalog
+            assets in JSON format.
         </p>
 
         <p class="muted">
-            Built with Node.js, GitHub Actions, and Vercel.
+            Node.js · GitHub Actions · Vercel
         </p>
     </section>
 
 
     <footer>
-        Sniper API · Open Source
+        Sniper API
     </footer>
 
 </div>
+
+
+<script>
+async function loadInfo() {
+    try {
+        const response = await fetch("/v1/info.json");
+        const info = await response.json();
+
+        document.getElementById("emotes-count").textContent =
+            `${info.emotes.count.toLocaleString()} emotes`;
+
+        document.getElementById("animations-count").textContent =
+            `${info.animations.count.toLocaleString()} animations`;
+
+        document.getElementById("moods-count").textContent =
+            `${info.moods.count.toLocaleString()} moods`;
+
+        document.getElementById("last-update").textContent =
+            `Updated ${new Date(info.lastUpdate).toLocaleString()}`;
+
+    } catch {
+        document.getElementById("emotes-count").textContent =
+            "Unavailable";
+
+        document.getElementById("animations-count").textContent =
+            "Unavailable";
+
+        document.getElementById("moods-count").textContent =
+            "Unavailable";
+
+        document.getElementById("last-update").textContent =
+            "Unavailable";
+    }
+}
+
+loadInfo();
+</script>
 
 </body>
 </html>
