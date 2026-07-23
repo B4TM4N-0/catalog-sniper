@@ -1,168 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Documentation</title>
-    <meta name="description" content="Catalog Sniper documentation.">
-
+    <title>Catalog Sniper - Documentation</title>
+    <meta name="description" content="Catalog Sniper documentation and API reference.">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="docs-container">
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="brand">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                <span>Catalog Sniper</span>
+            </a>
+            <div class="header-badge">v1.0.0</div>
+        </div>
+    </header>
 
-    <aside class="sidebar">
+    <div class="docs-container">
 
-        <h2>Catalog Sniper</h2>
+        <aside class="sidebar">
+            <div class="sidebar-group">
+                <span class="sidebar-title">Getting Started</span>
+                <nav class="sidebar-links">
+                    <a href="#introduction" class="active">Introduction</a>
+                    <a href="#endpoints">Endpoints</a>
+                    <a href="#response">Response Format</a>
+                    <a href="#examples">Examples</a>
+                </nav>
+            </div>
+        </aside>
 
-        <nav>
-            <a href="#introduction">Introduction</a>
-            <a href="#endpoints">Endpoints</a>
-            <a href="#response">Response Format</a>
-            <a href="#examples">Examples</a>
-        </nav>
+        <main class="content">
 
-    </aside>
-
-
-    <main class="content">
-
-
-        <section id="introduction">
-
-            <h1>Documentation</h1>
-
-            <p>
-                Catalog Sniper provides public Roblox catalog data
-                containing emotes, animations, and moods.
-            </p>
-
-            <p>
-                All datasets are available as JSON files and are
-                automatically updated through GitHub Actions.
-            </p>
-
-        </section>
-
-
-
-        <section id="endpoints">
-
-            <h2>Endpoints</h2>
-
-
-            <div class="endpoint">
-
-                <code>GET /v1/emotedata.json</code>
-
-                <p>
-                    Returns Roblox emote catalog data.
+            <section id="introduction">
+                <div class="breadcrumbs">
+                    <span>Docs</span>
+                    <span>/</span>
+                    <span class="current">Introduction</span>
+                </div>
+                
+                <h1>Documentation</h1>
+                <p class="lead">
+                    Access public Roblox catalog datasets for emotes, animations, and moods via lightweight JSON APIs.
                 </p>
 
-            </div>
-
-
-            <div class="endpoint">
-
-                <code>GET /v1/animationdata.json</code>
+                <hr class="separator" />
 
                 <p>
-                    Returns Roblox animation catalog data.
+                    Catalog Sniper provides high-availability public Roblox catalog data. All datasets are delivered standard as standalone <code>JSON</code> files and are automatically synchronized via GitHub Actions background jobs.
                 </p>
+            </section>
 
-            </div>
+            <section id="endpoints">
+                <h2>Endpoints</h2>
+                <p>All endpoints respond with standardized HTTP standard payloads and support standard CORS headers.</p>
 
+                <div class="endpoints-list">
+                    
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <code>/v1/emotedata.json</code>
+                        </div>
+                        <p>Returns Roblox emote catalog data including assets, IDs, and titles.</p>
+                    </div>
 
-            <div class="endpoint">
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <code>/v1/animationdata.json</code>
+                        </div>
+                        <p>Returns Roblox animation catalog data and associated asset details.</p>
+                    </div>
 
-                <code>GET /v1/mooddata.json</code>
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <code>/v1/mooddata.json</code>
+                        </div>
+                        <p>Returns Roblox mood catalog data for avatars.</p>
+                    </div>
 
-                <p>
-                    Returns Roblox mood catalog data.
-                </p>
+                    <div class="endpoint-card">
+                        <div class="endpoint-header">
+                            <span class="badge badge-get">GET</span>
+                            <code>/v1/info.json</code>
+                        </div>
+                        <p>Returns overall dataset metadata, global count statistics, and last-synced timestamps.</p>
+                    </div>
 
-            </div>
+                </div>
+            </section>
 
+            <section id="response">
+                <h2>Response Format</h2>
+                <p>Every catalog query returns a standard structural response payload:</p>
 
-            <div class="endpoint">
-
-                <code>GET /v1/info.json</code>
-
-                <p>
-                    Returns dataset metadata and statistics.
-                </p>
-
-            </div>
-
-
-        </section>
-
-
-
-
-        <section id="response">
-
-            <h2>Response Format</h2>
-
-
-            <p>
-                All catalog files use a consistent JSON structure.
-            </p>
-
-
-            <pre><code>{
-  "keyword": null,
-  "totalItems": 112,
-  "lastUpdate": "2026-07-23T10:25:43.372Z",
-  "data": [
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>response.json</span>
+                        <span class="code-lang">json</span>
+                    </div>
+                    <pre><code>{
+  <span class="key">"keyword"</span>: <span class="null">null</span>,
+  <span class="key">"totalItems"</span>: <span class="number">112</span>,
+  <span class="key">"lastUpdate"</span>: <span class="string">"2026-07-23T10:25:43.372Z"</span>,
+  <span class="key">"data"</span>: [
     {
-      "id": 14618207727,
-      "name": "Default Mood"
+      <span class="key">"id"</span>: <span class="number">14618207727</span>,
+      <span class="key">"name"</span>: <span class="string">"Default Mood"</span>
     }
   ]
 }</code></pre>
+                </div>
+            </section>
 
+            <section id="examples">
+                <h2>Examples</h2>
+                <p>Fetch dataset contents using JavaScript's native Fetch API:</p>
 
-        </section>
-
-
-
-
-        <section id="examples">
-
-            <h2>Examples</h2>
-
-
-            <p>
-                Fetch a dataset using a normal HTTP request:
-            </p>
-
-
-            <pre><code>fetch("/v1/mooddata.json")
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>example.js</span>
+                        <span class="code-lang">javascript</span>
+                    </div>
+                    <pre><code><span class="keyword">fetch</span>(<span class="string">"/v1/mooddata.json"</span>)
+  .<span class="keyword">then</span>(response => response.<span class="function">json</span>())
+  .<span class="keyword">then</span>(data => {
+    console.<span class="function">log</span>(data);
   });</code></pre>
+                </div>
+            </section>
 
+            <footer class="footer">
+                <p>Catalog Sniper · Open Source software under MIT License.</p>
+            </footer>
 
-        </section>
+        </main>
 
-
-
-
-        <footer>
-            Catalog Sniper · Open Source
-        </footer>
-
-
-    </main>
-
-
-</div>
-
+    </div>
 
 </body>
 </html>
