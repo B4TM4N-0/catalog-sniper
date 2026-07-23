@@ -22,7 +22,7 @@ const Sources = [
     urls: [
       "https://catalog.roproxy.com/v1/search/items/details?Category=66&Limit=30"
     ],
-    output: "Moods.json"
+    output: "mooddata.json"
   }
 ];
 
