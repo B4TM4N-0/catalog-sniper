@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --background: #09090b;
+    --card: #0f0f12;
+    --border: #27272a;
+    --foreground: #fafafa;
+    --muted: #a1a1aa;
+    --code: #18181b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: var(--background);
+    color: var(--foreground);
+
+    font-family: Inter, sans-serif;
+}
+
+.docs-container {
+    display: flex;
+
+    max-width: 1200px;
+    width: 100%;
+
+    margin: 0 auto;
+
+    padding: 40px 24px;
+
+    gap: 60px;
+}
+
+
+.sidebar {
+    width: 220px;
+
+    position: sticky;
+    top: 40px;
+
+    height: fit-content;
+}
+
+
+.sidebar h2 {
+    font-size: 18px;
+    font-weight: 600;
+
+    letter-spacing: -0.4px;
+
+    margin: 0 0 24px;
+}
+
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.sidebar a {
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    transition: .15s ease;
+}
+
+
+.sidebar a:hover {
+    color: var(--foreground);
+
+    background: var(--card);
+}
+
+
+
+.content {
+    width: 100%;
+
+    max-width: 760px;
+}
+
+
+section {
+    scroll-margin-top: 40px;
+
+    margin-bottom: 60px;
+}
+
+
+h1 {
+    font-size: 42px;
+
+    letter-spacing: -1.8px;
+
+    margin: 0 0 20px;
+}
+
+
+h2 {
+    font-size: 24px;
+
+    letter-spacing: -0.8px;
+
+    margin-bottom: 20px;
+}
+
+
+p {
+    color: var(--muted);
+
+    line-height: 1.7;
+
+    font-size: 15px;
+}
+
+
+.endpoint {
+    border: 1px solid var(--border);
+
+    background: var(--card);
+
+    border-radius: 8px;
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    transition: border-color .15s ease;
+}
+
+
+.endpoint:hover {
+    border-color: #3f3f46;
+}
+
+
+.endpoint code {
+    font-family: "JetBrains Mono", monospace;
+
+    color: var(--foreground);
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+
+.endpoint p {
+    margin: 12px 0 0;
+}
+
+
+
+pre {
+    background: var(--code);
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    padding: 18px;
+
+    overflow-x: auto;
+
+    margin-top: 20px;
+}
+
+
+pre code {
+    font-family: "JetBrains Mono", monospace;
+
+    color: var(--foreground);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+
+footer {
+    border-top: 1px solid var(--border);
+
+    padding-top: 24px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+
+@media (max-width: 800px) {
+
+    .docs-container {
+        display: block;
+
+        padding: 24px;
+    }
+
+
+    .sidebar {
+        position: static;
+
+        width: 100%;
+
+        margin-bottom: 40px;
+    }
+
+
+    h1 {
+        font-size: 36px;
+    }
+
+  }
