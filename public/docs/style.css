@@ -2,11 +2,11 @@
 
 :root {
     --background: #09090b;
-    --card: #0f0f12;
-    --border: #27272a;
     --foreground: #fafafa;
     --muted: #a1a1aa;
-    --code: #18181b;
+    --border: #27272a;
+    --secondary: #18181b;
+    --code: #111113;
 }
 
 * {
@@ -19,7 +19,6 @@ html {
 
 body {
     margin: 0;
-    min-height: 100vh;
 
     background: var(--background);
     color: var(--foreground);
@@ -27,45 +26,50 @@ body {
     font-family: Inter, sans-serif;
 }
 
+
 .docs-container {
     display: flex;
 
-    max-width: 1200px;
-    width: 100%;
+    min-height: 100vh;
 
-    margin: 0 auto;
+    max-width: 1400px;
 
-    padding: 40px 24px;
-
-    gap: 60px;
+    margin: auto;
 }
 
 
 .sidebar {
-    width: 220px;
+    width: 260px;
+
+    padding: 32px 24px;
+
+    border-right: 1px solid var(--border);
 
     position: sticky;
-    top: 40px;
 
-    height: fit-content;
+    top: 0;
+
+    height: 100vh;
 }
 
 
 .sidebar h2 {
-    font-size: 18px;
+    font-size: 16px;
+
     font-weight: 600;
 
-    letter-spacing: -0.4px;
+    letter-spacing: -0.3px;
 
-    margin: 0 0 24px;
+    margin: 0 0 32px;
 }
 
 
 .sidebar nav {
     display: flex;
+
     flex-direction: column;
 
-    gap: 6px;
+    gap: 4px;
 }
 
 
@@ -76,42 +80,47 @@ body {
 
     font-size: 14px;
 
-    padding: 6px 10px;
+    padding: 8px 12px;
 
     border-radius: 6px;
 
-    transition: .15s ease;
+    transition: .15s;
 }
 
 
 .sidebar a:hover {
     color: var(--foreground);
 
-    background: var(--card);
+    background: var(--secondary);
 }
 
 
 
 .content {
-    width: 100%;
+    flex: 1;
 
-    max-width: 760px;
+    max-width: 850px;
+
+    padding: 48px 48px;
 }
 
 
-section {
-    scroll-margin-top: 40px;
 
-    margin-bottom: 60px;
+section {
+    margin-bottom: 70px;
+
+    scroll-margin-top: 30px;
 }
 
 
 h1 {
     font-size: 42px;
 
-    letter-spacing: -1.8px;
+    letter-spacing: -2px;
 
-    margin: 0 0 20px;
+    line-height: 1.1;
+
+    margin: 0 0 18px;
 }
 
 
@@ -127,45 +136,56 @@ h2 {
 p {
     color: var(--muted);
 
-    line-height: 1.7;
-
     font-size: 15px;
+
+    line-height: 1.7;
 }
+
 
 
 .endpoint {
     border: 1px solid var(--border);
 
-    background: var(--card);
-
     border-radius: 8px;
 
-    padding: 18px;
+    padding: 20px;
 
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 
-    transition: border-color .15s ease;
+    background: transparent;
+
+    transition: .2s;
 }
 
 
 .endpoint:hover {
+    background: var(--secondary);
+
     border-color: #3f3f46;
 }
 
 
 .endpoint code {
+    display: inline-flex;
+
     font-family: "JetBrains Mono", monospace;
+
+    font-size: 13px;
 
     color: var(--foreground);
 
-    font-size: 14px;
+    background: var(--secondary);
 
-    font-weight: 500;
+    border: 1px solid var(--border);
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
 }
 
 
 .endpoint p {
-    margin: 12px 0 0;
+    margin: 14px 0 0;
 }
 
 
@@ -177,22 +197,20 @@ pre {
 
     border-radius: 8px;
 
-    padding: 18px;
+    padding: 20px;
 
     overflow-x: auto;
-
-    margin-top: 20px;
 }
 
 
 pre code {
     font-family: "JetBrains Mono", monospace;
 
-    color: var(--foreground);
-
     font-size: 13px;
 
     line-height: 1.7;
+
+    color: var(--foreground);
 }
 
 
@@ -209,21 +227,28 @@ footer {
 
 
 
-@media (max-width: 800px) {
+@media(max-width: 900px) {
 
     .docs-container {
         display: block;
-
-        padding: 24px;
     }
 
 
     .sidebar {
-        position: static;
-
         width: 100%;
 
-        margin-bottom: 40px;
+        height: auto;
+
+        position: relative;
+
+        border-right: 0;
+
+        border-bottom: 1px solid var(--border);
+    }
+
+
+    .content {
+        padding: 32px 24px;
     }
 
 
