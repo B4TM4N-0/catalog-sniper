@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2026-07-23T10:25:43.372Z",
+  "emotes": {
+    "count": 0,
+    "path": "/emotedata.json"
+  },
+  "animations": {
+    "count": 0,
+    "path": "/animationdata.json"
+  },
+  "moods": {
+    "count": 0,
+    "path": "/moods.json"
+  }
+}
