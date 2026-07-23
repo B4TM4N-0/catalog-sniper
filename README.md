@@ -1,4 +1,4 @@
-#Catalog Sniper
+# Catalog Sniper
 
 A Roblox catalog data API providing emotes, animations, and moods as JSON datasets.
 
