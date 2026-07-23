@@ -37,6 +37,55 @@ header {
     margin-bottom: 64px;
 }
 
+/* Announcement Banner */
+.announcement-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 12px 4px 6px;
+    margin-bottom: 24px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--foreground);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s ease;
+}
+
+.announcement-banner:hover {
+    background-color: var(--hover);
+    border-color: #3f3f46;
+}
+
+.announcement-banner .badge {
+    background-color: #fafafa;
+    color: #09090b;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+
+.announcement-banner .banner-text {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.announcement-banner:hover .banner-text {
+    color: var(--foreground);
+}
+
+.announcement-banner .arrow {
+    color: var(--muted);
+    transition: transform 0.2s ease;
+}
+
+.announcement-banner:hover .arrow {
+    transform: translateX(2px);
+    color: var(--foreground);
+}
+
 h1 {
     font-size: 42px;
     letter-spacing: -1.8px;
