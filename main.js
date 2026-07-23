@@ -131,7 +131,7 @@ async function fetchCatalog(url, name, existingData, isMoods) {
         if (isMoods) {
           if (item.bundledItems?.length) {
             for (const b of item.bundledItems) {
-              if (b.assetType === 78 && b.type === "Asset" && b.id && b.name) {
+              if (b.assetType === 78 && b.type === "Asset" && typeof b.id === "number" && typeof b.name === "string") {
                 if (!existingData.ids.has(b.id)) {
                   allItems.push({ id: b.id, name: b.name });
                   existingData.ids.add(b.id);
@@ -203,7 +203,7 @@ async function processAPIs() {
 
     let newTotal = 0;
     let dupTotal = 0;
-    const isMoods = filePath === "Moods.json";
+    const isMoods = filePath === "mooddata.json";
 
     for (const url of source.urls) {
       const result = await fetchCatalog(url, source.name, existingData, isMoods);
