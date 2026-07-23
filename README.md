@@ -1,4 +1,3 @@
-Total emotes: `44148`
-Total animations: `30`
+#API
 
-credits from 7dy7
+/v1/info.json
