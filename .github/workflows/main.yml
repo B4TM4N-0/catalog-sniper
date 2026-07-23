@@ -8,6 +8,7 @@ on:
 jobs:
   update-files:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
@@ -34,25 +35,25 @@ jobs:
         run: |
           DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
 
-          EMOTES=$(jq '.totalItems' emotedata.json)
-          ANIMATIONS=$(jq '.totalItems' animationdata.json)
-          MOODS=$(jq '.totalItems' mooddata.json)
+          EMOTES=$(jq '.totalItems' public/v1/emotedata.json)
+          ANIMATIONS=$(jq '.totalItems' public/v1/animationdata.json)
+          MOODS=$(jq '.totalItems' public/v1/mooddata.json)
 
-          cat > v1/info.json <<EOF
+          cat > public/v1/info.json <<EOF
           {
             "version": "1.0.0",
             "lastUpdate": "$DATE",
             "emotes": {
               "count": $EMOTES,
-              "path": "/emotedata.json"
+              "path": "/v1/emotedata.json"
             },
             "animations": {
               "count": $ANIMATIONS,
-              "path": "/animationdata.json"
+              "path": "/v1/animationdata.json"
             },
             "moods": {
               "count": $MOODS,
-              "path": "/mooddata.json"
+              "path": "/v1/mooddata.json"
             }
           }
           EOF
@@ -60,7 +61,7 @@ jobs:
       - name: Check for Changes
         id: git-check
         run: |
-          if ! git diff --exit-code emotedata.json animationdata.json mooddata.json v1/info.json; then
+          if ! git diff --exit-code public/v1; then
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
@@ -70,7 +71,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          git add emotedata.json animationdata.json mooddata.json v1/info.json
+          git add public/v1
 
           git commit -m "chore: update catalog data - $(date '+%Y-%m-%d %H:%M:%S UTC')"
 
@@ -78,7 +79,7 @@ jobs:
 
       - name: Log Update Results
         run: |
-          for FILE in emotedata.json animationdata.json mooddata.json; do
+          for FILE in public/v1/emotedata.json public/v1/animationdata.json public/v1/mooddata.json; do
             echo "--- $FILE ---"
 
             if [ -f "$FILE" ]; then
@@ -95,5 +96,5 @@ jobs:
 
       - name: Log API Info
         run: |
-          echo "--- v1/info.json ---"
-          cat v1/info.json
+          echo "--- public/v1/info.json ---"
+          cat public/v1/info.json
