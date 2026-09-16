@@ -120,62 +120,66 @@ async function fetchCatalog(url, name, existingData, isMoods) {
       page++;
       log(`${name} - Page ${page}`);
 
-      const res = await fetchJSON(cursor ? `${url}&Cursor=${cursor}` : url);
+      const requestUrl = cursor ? `${url}&Cursor=${encodeURIComponent(cursor)}` : url;
+      const res = await fetchJSON(requestUrl);
 
-      if (!res.data || !Array.isArray(res.data)) {
-        cursor = res.nextPageCursor;
-        continue;
+      if (!Array.isArray(res.data)) {
+        log(`${name} - Invalid response data`);
+        break;
       }
 
       for (const item of res.data) {
         if (isMoods) {
-          if (item.bundledItems?.length) {
-            for (const b of item.bundledItems) {
-              if (b.assetType === 78 && b.type === "Asset" && typeof b.id === "number" && typeof b.name === "string") {
-                if (!existingData.ids.has(b.id)) {
-                  allItems.push({ id: b.id, name: b.name });
-                  existingData.ids.add(b.id);
-                  newCount++;
-                } else {
-                  duplicateCount++;
-                }
-              }
+          for (const bundledItem of item.bundledItems || []) {
+            if (bundledItem.type !== "Asset" || bundledItem.assetType !== 78 || typeof bundledItem.id !== "number" || typeof bundledItem.name !== "string") {
+              continue;
             }
-          }
-        } else {
-          if (existingData.ids.has(item.id)) {
-            duplicateCount++;
-            continue;
+
+            if (existingData.ids.has(bundledItem.id)) {
+              duplicateCount++;
+              continue;
+            }
+
+            allItems.push({ id: bundledItem.id, name: bundledItem.name });
+            existingData.ids.add(bundledItem.id);
+            newCount++;
           }
 
-          const record = { id: item.id, name: item.name };
-
-          if (item.bundledItems?.length) {
-            const bundled = {};
-            let counter = 1;
-            for (const b of item.bundledItems) {
-              if (b.type !== "UserOutfit" && b.id) {
-                const key = String(counter++);
-                bundled[key] = bundled[key] || [];
-                bundled[key].push(b.id);
-              }
-            }
-            if (Object.keys(bundled).length > 0) {
-              record.bundledItems = bundled;
-            }
-          }
-
-          allItems.push(record);
-          existingData.ids.add(item.id);
-          newCount++;
+          continue;
         }
+
+        if (existingData.ids.has(item.id)) {
+          duplicateCount++;
+          continue;
+        }
+
+        const record = { id: item.id, name: item.name };
+
+        if (item.bundledItems?.length) {
+          const bundled = {};
+          let counter = 1;
+
+          for (const b of item.bundledItems) {
+            if (b.type !== "UserOutfit" && b.id) {
+              const key = String(counter++);
+              bundled[key] = bundled[key] || [];
+              bundled[key].push(b.id);
+            }
+          }
+
+          if (Object.keys(bundled).length > 0) {
+            record.bundledItems = bundled;
+          }
+        }
+
+        allItems.push(record);
+        existingData.ids.add(item.id);
+        newCount++;
       }
 
       cursor = res.nextPageCursor;
 
-      if (isMoods && page >= 3) {
-        break;
-      }
+      log(`${name} - Page ${page} complete | New: ${newCount} | Duplicates: ${duplicateCount}`);
 
       if (cursor && cursor.trim() !== "") {
         await new Promise((resolve) => setTimeout(resolve, 1000));
