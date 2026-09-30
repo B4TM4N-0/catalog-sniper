@@ -6,7 +6,6 @@
     <title>Catalog Sniper</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 <div class="container">
     <header>
@@ -15,81 +14,12 @@
             Public Roblox catalog data for emotes, animations, and moods.
             Updated automatically through GitHub Actions.
         </p>
-
         <div class="actions">
-            <a class="button primary" href="/docs">
-                Documentation
-            </a>
-            <a class="button" href="https://github.com/B4TM4N-0/catalog-sniper" target="_blank" rel="noopener noreferrer">
-                Repository
-            </a>
+            <a class="button primary" href="/docs">Documentation</a>
+            <a class="button" href="https://github.com/B4TM4N-0/catalog-sniper" target="_blank" rel="noopener noreferrer">Repository</a>
         </div>
     </header>
-
-	<section>
-	    <div class="section-header">
-	        <h2>Endpoints</h2>
-	    </div>
-	
-	    <div class="api-list">
-	        <a class="api-item" href="/v1/emotedata.json">
-	            <div class="api-main">
-	                <span class="method">GET</span>
-	                <div>
-	                    <h3>/v1/emotedata.json</h3>
-	                    <p>Roblox emote catalog data</p>
-	                </div>
-	            </div>
-	
-	            <div class="api-meta">
-	                <span id="emotes-count">Loading...</span>
-	            </div>
-	        </a>
-	
-	        <a class="api-item" href="/v1/animationdata.json">
-	            <div class="api-main">
-	                <span class="method">GET</span>
-	                <div>
-	                    <h3>/v1/animationdata.json</h3>
-	                    <p>Roblox animation catalog data</p>
-	                </div>
-	            </div>
-	
-	            <div class="api-meta">
-	                <span id="animations-count">Loading...</span>
-	            </div>
-	        </a>
-	
-	        <a class="api-item" href="/v1/mooddata.json">
-	            <div class="api-main">
-	                <span class="method">GET</span>
-	                <div>
-	                    <h3>/v1/mooddata.json</h3>
-	                    <p>Roblox mood catalog data</p>
-	                </div>
-	            </div>
-	
-	            <div class="api-meta">
-	                <span id="moods-count">Loading...</span>
-	            </div>
-	        </a>
-	
-	        <a class="api-item" href="/v1/info.json">
-	            <div class="api-main">
-	                <span class="method">GET</span>
-	                <div>
-	                    <h3>/v1/info.json</h3>
-	                    <p>Dataset metadata and update information</p>
-	                </div>
-	            </div>
-	
-	            <div class="api-meta">
-	                <span id="last-update">Loading...</span>
-	            </div>
-	        </a>
-	    </div>
-	</section>
-
+    <img src="cat-cat-dance.gif" alt="Dancing cat">
     <section class="info">
         <h2>About</h2>
         <p>
@@ -98,24 +28,5 @@
         </p>
     </section>
 </div>
-<script>
-async function Init() {
-    try {
-        const response = await fetch("/v1/info.json");
-        const info = await response.json();
-        
-        document.getElementById("emotes-count").textContent =`${info.emotes.count.toLocaleString()} emotes`;
-        document.getElementById("animations-count").textContent =`${info.animations.count.toLocaleString()} animations`;
-        document.getElementById("moods-count").textContent =`${info.moods.count.toLocaleString()} moods`;
-        document.getElementById("last-update").textContent =`Updated ${new Date(info.lastUpdate).toLocaleString()}`;
-    } catch {
-        document.getElementById("emotes-count").textContent ="Unavailable";
-        document.getElementById("animations-count").textContent ="Unavailable";
-        document.getElementById("moods-count").textContent ="Unavailable";
-        document.getElementById("last-update").textContent ="Unavailable";
-    }
-}
-Init();
-</script>
 </body>
 </html>
