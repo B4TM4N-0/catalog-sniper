@@ -3,26 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Catalog Sniper</title>
-    <meta name="description" content="Roblox catalog API for emotes, animations, and moods.">
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
 <div class="container">
-
     <header>
-        <a class="announcement-banner" href="https://kei-scripts.vercel.app" target="_blank" rel="noopener noreferrer">
-            <span class="badge">Script</span>
-            <span class="banner-text">Get FE All Emotes & scripts at kei-scripts.vercel.app</span>
-            <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
-
         <h1>Catalog Sniper Web</h1>
-
         <p>
             Public Roblox catalog data for emotes, animations, and moods.
             Updated automatically through GitHub Actions.
@@ -32,105 +20,102 @@
             <a class="button primary" href="/docs">
                 Documentation
             </a>
-
             <a class="button" href="https://github.com/B4TM4N-0/catalog-sniper" target="_blank" rel="noopener noreferrer">
                 Repository
             </a>
         </div>
     </header>
 
-
-    <section>
-        <h2>API</h2>
-
-        <div class="grid">
-
-            <a class="card" href="/v1/emotedata.json">
-                <h3>/v1/emotedata.json</h3>
-                <p id="emotes-count">
-                    Loading emotes...
-                </p>
-            </a>
-
-
-            <a class="card" href="/v1/animationdata.json">
-                <h3>/v1/animationdata.json</h3>
-                <p id="animations-count">
-                    Loading animations...
-                </p>
-            </a>
-
-
-            <a class="card" href="/v1/mooddata.json">
-                <h3>/v1/mooddata.json</h3>
-                <p id="moods-count">
-                    Loading moods...
-                </p>
-            </a>
-
-
-            <a class="card" href="/v1/info.json">
-                <h3>/v1/info.json</h3>
-                <p id="last-update">
-                    Loading metadata...
-                </p>
-            </a>
-
-        </div>
-    </section>
-
+	<section>
+	    <div class="section-header">
+	        <h2>Endpoints</h2>
+	    </div>
+	
+	    <div class="api-list">
+	        <a class="api-item" href="/v1/emotedata.json">
+	            <div class="api-main">
+	                <span class="method">GET</span>
+	                <div>
+	                    <h3>/v1/emotedata.json</h3>
+	                    <p>Roblox emote catalog data</p>
+	                </div>
+	            </div>
+	
+	            <div class="api-meta">
+	                <span id="emotes-count">Loading...</span>
+	            </div>
+	        </a>
+	
+	        <a class="api-item" href="/v1/animationdata.json">
+	            <div class="api-main">
+	                <span class="method">GET</span>
+	                <div>
+	                    <h3>/v1/animationdata.json</h3>
+	                    <p>Roblox animation catalog data</p>
+	                </div>
+	            </div>
+	
+	            <div class="api-meta">
+	                <span id="animations-count">Loading...</span>
+	            </div>
+	        </a>
+	
+	        <a class="api-item" href="/v1/mooddata.json">
+	            <div class="api-main">
+	                <span class="method">GET</span>
+	                <div>
+	                    <h3>/v1/mooddata.json</h3>
+	                    <p>Roblox mood catalog data</p>
+	                </div>
+	            </div>
+	
+	            <div class="api-meta">
+	                <span id="moods-count">Loading...</span>
+	            </div>
+	        </a>
+	
+	        <a class="api-item" href="/v1/info.json">
+	            <div class="api-main">
+	                <span class="method">GET</span>
+	                <div>
+	                    <h3>/v1/info.json</h3>
+	                    <p>Dataset metadata and update information</p>
+	                </div>
+	            </div>
+	
+	            <div class="api-meta">
+	                <span id="last-update">Loading...</span>
+	            </div>
+	        </a>
+	    </div>
+	</section>
 
     <section class="info">
         <h2>About</h2>
-
         <p>
             Sniper API is an open-source dataset containing Roblox catalog
             assets in JSON format.
         </p>
-
-        <p class="muted">
-            Node.js · Vercel
-        </p>
     </section>
-
 </div>
-
-
 <script>
-async function loadInfo() {
+async function Init() {
     try {
         const response = await fetch("/v1/info.json");
         const info = await response.json();
-
-        document.getElementById("emotes-count").textContent =
-            `${info.emotes.count.toLocaleString()} emotes`;
-
-        document.getElementById("animations-count").textContent =
-            `${info.animations.count.toLocaleString()} animations`;
-
-        document.getElementById("moods-count").textContent =
-            `${info.moods.count.toLocaleString()} moods`;
-
-        document.getElementById("last-update").textContent =
-            `Updated ${new Date(info.lastUpdate).toLocaleString()}`;
-
+        
+        document.getElementById("emotes-count").textContent =`${info.emotes.count.toLocaleString()} emotes`;
+        document.getElementById("animations-count").textContent =`${info.animations.count.toLocaleString()} animations`;
+        document.getElementById("moods-count").textContent =`${info.moods.count.toLocaleString()} moods`;
+        document.getElementById("last-update").textContent =`Updated ${new Date(info.lastUpdate).toLocaleString()}`;
     } catch {
-        document.getElementById("emotes-count").textContent =
-            "Unavailable";
-
-        document.getElementById("animations-count").textContent =
-            "Unavailable";
-
-        document.getElementById("moods-count").textContent =
-            "Unavailable";
-
-        document.getElementById("last-update").textContent =
-            "Unavailable";
+        document.getElementById("emotes-count").textContent ="Unavailable";
+        document.getElementById("animations-count").textContent ="Unavailable";
+        document.getElementById("moods-count").textContent ="Unavailable";
+        document.getElementById("last-update").textContent ="Unavailable";
     }
 }
-
-loadInfo();
+Init();
 </script>
-
 </body>
 </html>
