@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --muted: #a1a1aa;
-    --border: #27272a;
-    --card: #09090b;
-    --hover: #18181b;
+    --background: #090909;
+    --foreground: #f5f5f5;
+    --muted: #8a8a8a;
+    --border: #242424;
+    --card: #101010;
+    --hover: #191919;
 }
 
 * {
@@ -37,55 +37,6 @@ header {
     margin-bottom: 64px;
 }
 
-/* Announcement Banner */
-.announcement-banner {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 4px 12px 4px 6px;
-    margin-bottom: 24px;
-    border-radius: 9999px;
-    border: 1px solid var(--border);
-    background-color: rgba(255, 255, 255, 0.03);
-    color: var(--foreground);
-    text-decoration: none;
-    font-size: 13px;
-    transition: all 0.2s ease;
-}
-
-.announcement-banner:hover {
-    background-color: var(--hover);
-    border-color: #3f3f46;
-}
-
-.announcement-banner .badge {
-    background-color: #fafafa;
-    color: #09090b;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 9999px;
-}
-
-.announcement-banner .banner-text {
-    color: var(--muted);
-    font-weight: 400;
-}
-
-.announcement-banner:hover .banner-text {
-    color: var(--foreground);
-}
-
-.announcement-banner .arrow {
-    color: var(--muted);
-    transition: transform 0.2s ease;
-}
-
-.announcement-banner:hover .arrow {
-    transform: translateX(2px);
-    color: var(--foreground);
-}
-
 h1 {
     font-size: 42px;
     letter-spacing: -1.8px;
@@ -109,24 +60,15 @@ header p {
 .button {
     display: inline-flex;
     align-items: center;
-
     height: 38px;
-
     padding: 0 16px;
-
-    border-radius: 7px;
-
+    border-radius: 10px;
     border: 1px solid var(--border);
-
     background: transparent;
-
     color: var(--foreground);
-
     text-decoration: none;
-
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-
     transition: .15s;
 }
 
@@ -141,72 +83,13 @@ header p {
 
 section h2 {
     font-size: 20px;
-
     margin-bottom: 16px;
-
     letter-spacing: -0.5px;
-}
-
-.grid {
-    display: flex;
-    flex-direction: column;
-
-    border: 1px solid var(--border);
-
-    border-radius: 8px;
-
-    overflow: hidden;
-}
-
-.card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 18px;
-
-    text-decoration: none;
-
-    border-bottom: 1px solid var(--border);
-
-    background: transparent;
-
-    transition: .15s;
-}
-
-.card:last-child {
-    border-bottom: none;
-}
-
-.card:hover {
-    background: var(--hover);
-}
-
-.card h3 {
-    margin: 0;
-
-    color: var(--foreground);
-
-    font-family: "JetBrains Mono", monospace;
-
-    font-size: 14px;
-
-    font-weight: 500;
-}
-
-.card p {
-    margin: 0;
-
-    color: var(--muted);
-
-    font-size: 14px;
 }
 
 .info {
     margin-top: 48px;
-
     padding-top: 32px;
-
     border-top: 1px solid var(--border);
 }
 
@@ -220,14 +103,99 @@ section h2 {
     line-height: 1.6;
 }
 
-.muted {
-    font-size: 14px;
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 16px;
 }
 
-footer {
-    margin-top: 64px;
+.api-list {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
 
+.api-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px;
+    color: var(--foreground);
+    text-decoration: none;
+    background: transparent;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s;
+}
+
+.api-item:last-child {
+    border-bottom: none;
+}
+
+.api-item:hover {
+    background: var(--hover);
+}
+
+.api-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.method {
+    flex-shrink: 0;
+    color: #b59a32;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: .3px;
+}
+
+.api-main h3 {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.api-main p {
+    margin: 5px 0 0;
     color: var(--muted);
+    font-size: 15px;
+}
 
+.api-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+    color: var(--muted);
     font-size: 13px;
+}
+
+.api-item:hover .arrow {
+    color: var(--foreground);
+    transform: translateX(3px);
+}
+
+@media (max-width: 600px) {
+    .api-item {
+        padding: 16px;
+    }
+
+    .api-main p {
+        display: none;
+    }
+
+    .api-meta span:first-child {
+        display: none;
+    }
+
+    .api-main h3 {
+        font-size: 13px;
+    }
 }
