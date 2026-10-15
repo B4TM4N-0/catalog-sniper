@@ -33,7 +33,10 @@ function log(msg) {
 function loadData(filePath) {
   try {
     if (fs.existsSync(filePath)) {
-      const items = JSON.parse(fs.readFileSync(filePath, "utf8")).data || [];
+      const items = (JSON.parse(fs.readFileSync(filePath, "utf8")).data || []).map((item) => ({
+        ...item,
+        description: typeof item.description === "string" ? item.description : ""
+      }));
       return { items, ids: new Set(items.map((i) => i.id)) };
     }
   } catch {
@@ -44,14 +47,18 @@ function loadData(filePath) {
 
 function saveData(items, filePath) {
   try {
+    const normalizedItems = items.map((item) => ({
+      ...item,
+      description: typeof item.description === "string" ? item.description : ""
+    }));
     fs.writeFileSync(
       filePath,
       JSON.stringify(
         {
           keyword: null,
-          totalItems: items.length,
+          totalItems: normalizedItems.length,
           lastUpdate: new Date().toISOString(),
-          data: items
+          data: normalizedItems
         },
         null,
         2
@@ -140,7 +147,11 @@ async function fetchCatalog(url, name, existingData, isMoods) {
               continue;
             }
 
-            allItems.push({ id: bundledItem.id, name: bundledItem.name });
+            allItems.push({
+              id: bundledItem.id,
+              name: bundledItem.name,
+              description: typeof bundledItem.description === "string" ? bundledItem.description : ""
+            });
             existingData.ids.add(bundledItem.id);
             newCount++;
           }
@@ -153,7 +164,11 @@ async function fetchCatalog(url, name, existingData, isMoods) {
           continue;
         }
 
-        const record = { id: item.id, name: item.name };
+        const record = {
+          id: item.id,
+          name: item.name,
+          description: typeof item.description === "string" ? item.description : ""
+        };
 
         if (item.bundledItems?.length) {
           const bundled = {};
