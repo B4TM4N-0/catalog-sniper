@@ -1,5 +1,4 @@
 name: Sniper Auto Update
-
 on:
   schedule:
     - cron: '0 * * * *'
@@ -31,6 +30,9 @@ jobs:
           echo "Starting catalog update..."
           node main.js
 
+      - name: Normalize descriptions and rebuild search indexes
+        run: node scripts/build-search-index.js
+
       - name: Update API Info
         run: |
           DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
@@ -61,7 +63,7 @@ jobs:
       - name: Check for Changes
         id: git-check
         run: |
-          if ! git diff --exit-code public/v1; then
+          if ! git diff --exit-code -- public/v1 generated/search-indexes; then
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
@@ -71,7 +73,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          git add public/v1
+          git add public/v1 generated/search-indexes
 
           git commit -m "chore: update catalog data - $(date '+%Y-%m-%d %H:%M:%S UTC')"
 

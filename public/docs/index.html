@@ -34,13 +34,13 @@
                 <h1>Documentation</h1>
                 <p class="lead">
                     Access public Roblox catalog datasets for emotes, animations,
-                    and moods via lightweight JSON APIs.
+                    and moods through paginated JSON APIs.
                 </p>
                 <hr class="separator">
                 <p>
                     Catalog Sniper provides public Roblox catalog data.
-                    All datasets are delivered as standalone <code>JSON</code>
-                    files and are automatically synchronized through GitHub Actions.
+                    Catalog data and its search indexes are automatically synchronized through GitHub Actions.
+                    Full dataset files remain available for backwards compatibility.
                 </p>
             </section>
             <section id="endpoints">
@@ -50,30 +50,30 @@
                     <div class="endpoint-card">
                         <div class="endpoint-header">
                             <span class="badge badge-get">GET</span>
-                            <code>/v1/emotedata.json</code>
+                            <code>/api/emotes</code>
                         </div>
                         <p>
                             Returns Roblox emote catalog data including assets,
-                            IDs, and titles.
+                            IDs, names, and descriptions with pagination and server-side search.
                         </p>
                     </div>
                     <div class="endpoint-card">
                         <div class="endpoint-header">
                             <span class="badge badge-get">GET</span>
-                            <code>/v1/animationdata.json</code>
+                            <code>/api/animation</code>
                         </div>
                         <p>
                             Returns Roblox animation catalog data and
-                            associated asset details.
+                            associated asset details, descriptions, pagination, and search.
                         </p>
                     </div>
                     <div class="endpoint-card">
                         <div class="endpoint-header">
                             <span class="badge badge-get">GET</span>
-                            <code>/v1/mooddata.json</code>
+                            <code>/api/moods</code>
                         </div>
                         <p>
-                            Returns Roblox mood catalog data for avatars.
+                            Returns paginated Roblox mood catalog data for avatars.
                         </p>
                     </div>
                     <div class="endpoint-card">
@@ -90,52 +90,55 @@
             </section>
             <section id="response">
                 <h2>Response Format</h2>
-                <p>Every catalog query returns a standardized JSON response:</p>
+                <p>Each paginated endpoint accepts <code>page</code> (default 1), <code>limit</code> (default 50, maximum 200), and <code>search</code>. Search is case-insensitive across names and descriptions.</p>
                 <div class="code-block">
                     <pre><code>{
-  <span class="key">"keyword"</span>: <span class="null">null</span>,
-  <span class="key">"totalItems"</span>: <span class="number">112</span>,
-  <span class="key">"lastUpdate"</span>: <span class="string">"2026-07-23T10:25:43.372Z"</span>,
   <span class="key">"data"</span>: [
     {
       <span class="key">"id"</span>: <span class="number">14618207727</span>,
-      <span class="key">"name"</span>: <span class="string">"Default Mood"</span>
+      <span class="key">"name"</span>: <span class="string">"Default Mood"</span>,
+      <span class="key">"description"</span>: <span class="string">""</span>
     }
-  ]
+  ],
+  <span class="key">"pagination"</span>: {
+    <span class="key">"page"</span>: <span class="number">1</span>,
+    <span class="key">"limit"</span>: <span class="number">50</span>,
+    <span class="key">"total"</span>: <span class="number">94</span>,
+    <span class="key">"hasMore"</span>: <span class="keyword">true</span>
+  }
 }</code></pre>
                 </div>
             </section>
             <section id="examples">
                 <h2>Examples</h2>
-                <p class="section-description">Get started with Catalog Sniper using Roblox's built-in HttpService.</p>
+                <p class="section-description">The complete Delta executor example is available in <code>example.lua</code>; it fetches pages from the API and can be connected to existing UI controls.</p>
                 <div class="example-card">
                     <div class="example-info">
                         <div>
                             <h3>Fetch emote data</h3>
                             <p>
-                                Retrieve the emote dataset and print the first
-                                10 entries.
+                            Run a paginated request from a Delta-compatible executor.
                             </p>
                         </div>
-                        <span class="example-file">example.luau</span>
+                        <span class="example-file">example.lua</span>
                     </div>            
                     <div class="code-block">
                         <pre><code><span class="keyword">local</span> HttpService = game:GetService(<span class="string">"HttpService"</span>)
-<span class="keyword">local</span> data = HttpService:JSONDecode(HttpService:GetAsync(<span class="string">"https://catalog-sniper.vercel.app/v1/emotedata.json"</span>))
+<span class="keyword">local</span> url = <span class="string">"https://catalog-sniper.vercel.app/api/emotes?page=1&amp;limit=50"</span>
+<span class="keyword">local</span> response = HttpService:JSONDecode(game:HttpGet(url))
 
-<span class="keyword">for</span> i = 1, math.min(<span class="number">10</span>, #data) <span class="keyword">do</span>
-    <span class="keyword">local</span> emote = data[i]
-    print(emote)
-<span class="keyword">end</span></code></pre>
+<span class="keyword">for</span> _, emote <span class="keyword">in</span> ipairs(response.data) <span class="keyword">do</span>
+    print(emote.id, emote.name, emote.description)
+<span class="keyword">end</span>
+print(response.pagination.hasMore)</code></pre>
                     </div>
                 </div>
                 <div class="example-note">
                     <span class="note-icon">i</span>
                     <p>
                         <strong>Note</strong>
-                        HTTP requests must be enabled in your Roblox
-                        experience under
-                        <code>Game Settings > Security</code>.
+                        The full <code>example.lua</code> includes caching,
+                        debounced search, page-size selection, and UI callbacks.
                     </p>
                 </div>
             </section>
