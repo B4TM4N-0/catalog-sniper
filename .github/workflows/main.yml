@@ -1,5 +1,4 @@
 name: Sniper Auto Update
-
 on:
   schedule:
     - cron: '0 * * * *'
